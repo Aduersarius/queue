@@ -1,0 +1,90 @@
+#include <iostream>
+using namespace std;
+
+template <typename T>
+class queue_t
+{
+
+	struct node_t {
+		int value;
+		node_t * forward;
+	};
+	node_t * head;
+	node_t * tail;
+
+public:
+	queue_t() {
+		node_t * head = NULL;
+		node_t * tail = NULL;
+	}
+	~queue_t() { while (head != NULL) pop(); }
+
+	void push(T a) {
+		node_t * add = new node_t;
+		add->value = a;
+		add->forward = NULL;
+		if (head == NULL) {
+			head = add; tail = add;
+		}
+		else {
+			node_t * s = head;
+			for (;;) {
+				if (s->forward == NULL) { s->forward = add; break;}
+				else {
+					s = s->forward;
+				}
+			}
+		}
+	}
+	T pop() {
+		if (head == NULL) {
+			cout << "empty queue"; return NULL;
+		}
+		else {
+			int a = head->value;
+			head = head->forward;
+			return a;
+		}
+	}
+	void print() {
+		node_t * s = head;
+		if (head != NULL) {
+			do {
+				cout << s->value << " -> ";
+				s = s->forward;
+			} while (s != NULL);
+		cout << "NULL" << endl;
+	    }
+	}
+	queue_t & operator=(queue_t & other) {
+		node_t * c = head;
+		while (c->forward != NULL) {
+			other.push(c->value);
+			c = c->forward;
+		}
+	}
+  };
+
+int main()
+{
+	queue_t<int> list; char op; int a;
+	cin >> op;
+	while (op != 'q') {
+		switch (op) {
+		case '+':
+			cin >> a;
+			list.push(a);
+			list.print();
+			break;
+		case '-':
+			cout << list.pop() << endl;
+			list.print();
+			break;
+		case '=':
+			list.print();
+		}
+		cin >> op;
+	}
+    return 0;
+}
+
